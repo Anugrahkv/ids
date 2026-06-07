@@ -8,7 +8,6 @@ This project serves as a comprehensive network security lab designed to establis
 ## 🗺️ Network Architecture & Topology
 
 > 📸 **Visual Proof 1: Network Topology**
-> *[Insert your flowchart/Visio diagram here showing Internet -> pfSense -> Ubuntu Server -> Suricata -> ELK Stack]*
 > <img width="256" height="384" alt="image" src="https://github.com/user-attachments/assets/29ac3fe9-4009-475b-aa0f-b7545d820a29" />
 
 
@@ -31,7 +30,6 @@ The architecture is built on a segmented virtual network:
 * Configured custom NAT rules to allow controlled access to the internal Apache2 web server while dropping unauthorized external traffic.
 
 > 📸 **Visual Proof 2: Firewall & Routing**
-> *[Insert screenshot of the pfSense Web GUI showing your Firewall Rules or NAT Port Forwarding configuration]*
 <img width="640" height="300" alt="image" src="https://github.com/user-attachments/assets/708f35e4-7efa-4447-92fe-3e7a6e585e71" />
 <img width="613" height="161" alt="image" src="https://github.com/user-attachments/assets/12420934-110f-49a9-8a8e-7e71ed240968" />
 <img width="733" height="274" alt="image" src="https://github.com/user-attachments/assets/3b2d0baa-1c7c-47f6-83c4-232937831789" />
@@ -47,7 +45,6 @@ The architecture is built on a segmented virtual network:
 * **Logstash:** Engineered a custom data pipeline utilizing Grok filters to parse raw logs into normalized, searchable fields.
 
 > 📸 **Visual Proof 3: Log Normalization Pipeline**
-> *[Insert terminal/code screenshot showing the JSON output of eve.json, your Logstash Grok filter, or Filebeat actively shipping logs]*
 <img width="828" height="529" alt="image" src="https://github.com/user-attachments/assets/2edcaacd-afb5-4efa-9cc3-eb9fadce6e27" />
 <img width="957" height="413" alt="image" src="https://github.com/user-attachments/assets/e1e66023-d5f0-447a-b23b-86c2230e963f" />
 
@@ -59,7 +56,8 @@ The architecture is built on a segmented virtual network:
 * **Elasticsearch & Kibana:** Indexed the parsed logs to build interactive dashboards, establishing a baseline for network traffic visualization and reducing manual log review time.
 
 > 📸 **Visual Proof 4: The Kibana Dashboard**
-> *[Insert your most impressive Kibana screenshot here, showing pie charts, traffic graphs, or the Discover tab with parsed logs]*
+<img width="885" height="482" alt="image" src="https://github.com/user-attachments/assets/546a76fe-f13f-4318-8389-8936b8f659a0" />
+
 
 ## 🎯 Key Takeaways
 * **SIEM Engineering:** Gained hands-on experience building a centralized logging pipeline, ensuring multi-source data is accurately parsed and indexed.
