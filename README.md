@@ -9,6 +9,8 @@ This project serves as a comprehensive network security lab designed to establis
 
 > 📸 **Visual Proof 1: Network Topology**
 > *[Insert your flowchart/Visio diagram here showing Internet -> pfSense -> Ubuntu Server -> Suricata -> ELK Stack]*
+> <img width="256" height="384" alt="image" src="https://github.com/user-attachments/assets/29ac3fe9-4009-475b-aa0f-b7545d820a29" />
+
 
 The architecture is built on a segmented virtual network:
 1. **Perimeter Defense:** A pfSense virtual firewall configured with strict LAN/WAN routing, NAT port forwarding, and baseline firewall rules.
