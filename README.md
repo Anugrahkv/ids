@@ -48,6 +48,8 @@ The architecture is built on a segmented virtual network:
 
 > 📸 **Visual Proof 3: Log Normalization Pipeline**
 > *[Insert terminal/code screenshot showing the JSON output of eve.json, your Logstash Grok filter, or Filebeat actively shipping logs]*
+<img width="811" height="887" alt="image" src="https://github.com/user-attachments/assets/a0fb23e5-acde-44c7-afb1-847936fdc3a2" />
+
 
 ## 📊 Centralized Security Dashboard
 
