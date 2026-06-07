@@ -33,10 +33,9 @@ The architecture is built on a segmented virtual network:
 > 📸 **Visual Proof 2: Firewall & Routing**
 > *[Insert screenshot of the pfSense Web GUI showing your Firewall Rules or NAT Port Forwarding configuration]*
 > <img width="640" height="300" alt="image" src="https://github.com/user-attachments/assets/708f35e4-7efa-4447-92fe-3e7a6e585e71" />
-<img width="613" height="161" alt="image" src="https://github.com/user-attachments/assets/12420934-110f-49a9-8a8e-7e71ed240968" />
-<img width="733" height="274" alt="image" src="https://github.com/user-attachments/assets/3b2d0baa-1c7c-47f6-83c4-232937831789" />
-<img width="713" height="276" alt="image" src="https://github.com/user-attachments/assets/1e2713dc-f78c-45ef-9f28-07ff0adb0115" />
-
+><img width="613" height="161" alt="image" src="https://github.com/user-attachments/assets/12420934-110f-49a9-8a8e-7e71ed240968" />
+><img width="733" height="274" alt="image" src="https://github.com/user-attachments/assets/3b2d0baa-1c7c-47f6-83c4-232937831789" />
+><img width="713" height="276" alt="image" src="https://github.com/user-attachments/assets/1e2713dc-f78c-45ef-9f28-07ff0adb0115" />
 
 
 ### 2. Suricata IDS Deployment
