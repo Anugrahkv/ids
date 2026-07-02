@@ -1,65 +1,364 @@
-# Enterprise Intrusion Detection & Threat Monitoring System (IDS)
+# 🔐 Firewall & Monitoring System for a Web Server
 
-## 📌 Objective
-This project serves as a comprehensive network security lab designed to establish total network visibility, centralize log management, and configure baseline threat detection. Serving as my Master's Project at Teesside University, the environment focuses on SIEM engineering—integrating an open-source firewall, an IDS engine, and a customized ELK pipeline to normalize and index network telemetry.
+> **MSc Cybersecurity Dissertation Project** — Teesside University (CIS4055)  
+> *An integrated open-source network security system combining a firewall, intrusion detection, and real-time monitoring.*
 
-📄 **Deep Dive:** *For a comprehensive breakdown of the academic research, log normalization processes, and infrastructure setup, please review the `IDS REPORT.pdf` attached in this repository.*
+---
 
-## 🗺️ Network Architecture & Topology
+## 📌 Overview
 
-> 📸 **Visual Proof 1: Network Topology**
-> <img width="256" height="384" alt="image" src="https://github.com/user-attachments/assets/29ac3fe9-4009-475b-aa0f-b7545d820a29" />
+This project implements a **multi-layered network security system** that protects a web server using entirely open-source tools. It integrates:
 
+- **pfSense** — Next-generation firewall
+- **Suricata** — Intrusion Detection System (IDS)
+- **ELK Stack** (Elasticsearch, Logstash, Kibana) — Log management & visualization
+- **Filebeat** — Lightweight log shipper
+- **Apache2 on Ubuntu Server** — Web application hosting
 
-The architecture is built on a segmented virtual network:
-1. **Perimeter Defense:** A pfSense virtual firewall configured with strict LAN/WAN routing, NAT port forwarding, and baseline firewall rules.
-2. **Internal Infrastructure:** An Ubuntu Server hosting an Apache2 web application.
-3. **Traffic Inspection:** Suricata deployed to continuously monitor internal network traffic and perform packet inspection against baseline rule sets.
-4. **Centralized SIEM:** Filebeat extracts Suricata's `eve.json` logs and Apache2 logs, forwarding them through Logstash for parsing before indexing them into Elasticsearch.
+The system provides real-time threat detection, centralized log management, and visual dashboards — making it suitable for small-to-medium enterprises or educational environments.
 
-## 🛠️ Technologies & Tools Utilized
-* **Firewall/Routing:** pfSense
-* **Intrusion Detection System (IDS):** Suricata
-* **SIEM & Log Management:** ELK Stack (Elasticsearch, Logstash, Kibana), Filebeat
-* **Infrastructure:** Ubuntu Server, Linux Command Line (CLI), Apache2
+---
 
-## 💻 Implementation & Configuration Proof
+## 🏗️ System Architecture
 
-### 1. pfSense Firewall Configuration
-* Deployed pfSense to manage internal and external network traffic boundaries.
-* Configured custom NAT rules to allow controlled access to the internal Apache2 web server while dropping unauthorized external traffic.
+```
+Internet
+   │
+   ▼
+ Router  (Virgin Media Hub 3.0 — Port Forwarding)
+   │
+   ▼
+Firewall (pfSense 2.7.0 — VM on VirtualBox)
+   │
+   ▼
+Internal Network (192.168.1.0/24)
+   │
+   ▼
+Ubuntu Server 24.04 LTS (192.168.1.102)
+   ├── Apache2        → Web Application (theanugrah.com)
+   ├── Suricata IDS   → Network Traffic Monitoring → eve.json
+   ├── Filebeat       → Ships Suricata logs → Elasticsearch
+   ├── Logstash       → Processes Apache2 access/error logs → Elasticsearch
+   ├── Elasticsearch  → Indexes & stores all logs (port 9200)
+   └── Kibana         → Visualization Dashboard (port 5601)
+```
 
-> 📸 **Visual Proof 2: Firewall & Routing**
-<img width="640" height="300" alt="image" src="https://github.com/user-attachments/assets/708f35e4-7efa-4447-92fe-3e7a6e585e71" />
-<img width="613" height="161" alt="image" src="https://github.com/user-attachments/assets/12420934-110f-49a9-8a8e-7e71ed240968" />
-<img width="733" height="274" alt="image" src="https://github.com/user-attachments/assets/3b2d0baa-1c7c-47f6-83c4-232937831789" />
-<img width="713" height="276" alt="image" src="https://github.com/user-attachments/assets/1e2713dc-f78c-45ef-9f28-07ff0adb0115" />
+---
 
+## 🛠️ Tech Stack
 
-### 2. Suricata IDS Deployment
-* Installed and configured Suricata to monitor the internal network interface.
-* Implemented standard threat detection rule sets to monitor active network traffic and log anomalies.
+| Component | Tool | Version |
+|-----------|------|---------|
+| Firewall | pfSense | 2.7.0 |
+| OS | Ubuntu Server | 24.04 LTS |
+| Web Server | Apache2 | Latest |
+| IDS | Suricata | 7.0.3 |
+| Log Shipper | Filebeat | 7.x |
+| Log Pipeline | Logstash | 7.x |
+| Search Engine | Elasticsearch | 7.x |
+| Dashboard | Kibana | 7.x |
+| Virtualisation | Oracle VirtualBox | Latest |
 
-### 3. ELK Stack SIEM Pipeline & Log Normalization
-* **Filebeat:** Configured as a lightweight shipper to ingest unstructured Suricata threat logs.
-* **Logstash:** Engineered a custom data pipeline utilizing Grok filters to parse raw logs into normalized, searchable fields.
+---
 
-> 📸 **Visual Proof 3: Log Normalization Pipeline**
-<img width="828" height="529" alt="image" src="https://github.com/user-attachments/assets/2edcaacd-afb5-4efa-9cc3-eb9fadce6e27" />
-<img width="957" height="413" alt="image" src="https://github.com/user-attachments/assets/e1e66023-d5f0-447a-b23b-86c2230e963f" />
+## ⚙️ Setup & Installation
 
+### Prerequisites
 
+- Oracle VirtualBox installed on host machine
+- pfSense ISO: [https://www.pfsense.org](https://www.pfsense.org)
+- Ubuntu Server ISO: [https://ubuntu.com](https://ubuntu.com)
 
+---
 
-## 📊 Centralized Security Dashboard
+### Step 1 — VirtualBox Network Setup
 
-* **Elasticsearch & Kibana:** Indexed the parsed logs to build interactive dashboards, establishing a baseline for network traffic visualization and reducing manual log review time.
+Create two virtual networks in VirtualBox:
 
-> 📸 **Visual Proof 4: The Kibana Dashboard**
-<img width="885" height="482" alt="image" src="https://github.com/user-attachments/assets/546a76fe-f13f-4318-8389-8936b8f659a0" />
+| Network Type | Name | IP Prefix |
+|---|---|---|
+| Host-only | VirtualBox Host-Only Ethernet Adapter | 192.168.1.100/24 |
+| NAT Network | WAN-1 | 111.111.111.112/28 |
 
+---
 
-## 🎯 Key Takeaways
-* **SIEM Engineering:** Gained hands-on experience building a centralized logging pipeline, ensuring multi-source data is accurately parsed and indexed.
-* **Infrastructure Deployment:** Successfully architected a multi-layered network defense utilizing the exact tools deployed in enterprise environments.
-* **Network Visibility:** Transformed raw, noisy system data into a clean, monitored, and highly visual dashboard framework.
+### Step 2 — pfSense Firewall VM
+
+```
+RAM: 4096 MB | CPU: 2 cores | Storage: 16 GB
+Adapter 1: Bridged (WAN)
+Adapter 2: Host-only (LAN)
+```
+
+After boot, configure LAN/WAN interfaces and access the web interface at `192.168.1.1`  
+Default credentials: `admin` / `pfsense` (change immediately)
+
+**Firewall Rules:**
+- Block private networks (RFC 1918)
+- Block bogon networks
+- NAT Port Forward: WAN:80 → 192.168.1.102:80 (Ubuntu web server)
+
+---
+
+### Step 3 — Ubuntu Server VM
+
+```
+RAM: 4096 MB | Storage: 25 GB
+Adapter: Host-only (Internal Network)
+Username: webserver | Password: webserver
+IP Address: 192.168.1.102
+```
+
+**Initial Setup:**
+```bash
+sudo apt update
+ip a   # Verify IP is 192.168.1.102
+```
+
+---
+
+### Step 4 — Apache2 Web Server
+
+```bash
+sudo apt install apache2 -y
+sudo systemctl start apache2
+sudo systemctl enable apache2
+```
+
+**Web App Directory:** `/var/www/webapp/`  
+**Config File:** `/etc/apache2/sites-enabled/test.project.final.conf`
+
+```bash
+# Disable default site and enable your own
+sudo a2dissite 000-default.conf
+sudo a2ensite test.project.final.conf
+sudo systemctl reload apache2
+```
+
+**UFW Firewall on Ubuntu:**
+```bash
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
+```
+
+---
+
+### Step 5 — ELK Stack
+
+**Install Java first:**
+```bash
+sudo apt install openjdk-11-jdk -y
+```
+
+**Install Elasticsearch:**
+```bash
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+sudo apt install elasticsearch -y
+sudo systemctl enable elasticsearch && sudo systemctl start elasticsearch
+```
+
+Key config in `/etc/elasticsearch/elasticsearch.yml`:
+```yaml
+network.host: 192.168.1.102
+http.port: 9200
+discovery.type: single-node
+```
+
+**Install Logstash:**
+```bash
+sudo apt install logstash -y
+```
+
+Config in `/etc/logstash/conf.d/webapp-log.conf` — reads Apache2 access/error logs and ships to Elasticsearch.
+
+**Install Kibana:**
+```bash
+sudo apt install kibana -y
+```
+
+Key config in `/etc/kibana/kibana.yml`:
+```yaml
+server.port: 5601
+server.host: "192.168.1.102"
+elasticsearch.hosts: ["http://192.168.1.102:9200"]
+```
+
+Access Kibana at: `http://192.168.1.102:5601`
+
+---
+
+### Step 6 — Suricata IDS
+
+```bash
+sudo add-apt-repository ppa:oisf/suricata-stable
+sudo apt-get install suricata -y
+sudo systemctl enable suricata && sudo systemctl start suricata
+```
+
+Key config in `/etc/suricata/suricata.yaml`:
+```yaml
+af-packet:
+  - interface: enp0s3
+```
+
+Logs saved to: `/var/log/suricata/eve.json`
+
+---
+
+### Step 7 — Filebeat
+
+```bash
+sudo apt-get install filebeat -y
+```
+
+Key config in `/etc/filebeat/filebeat.yml`:
+```yaml
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/suricata/eve.json
+
+output.elasticsearch:
+  hosts: ["http://192.168.1.102:9200"]
+
+setup.kibana:
+  host: "http://192.168.1.102:5601"
+```
+
+```bash
+sudo filebeat setup --index-management -E output.logstash.enabled=false \
+  -E 'output.elasticsearch.hosts=["http://192.168.1.102:9200"]'
+sudo systemctl enable filebeat && sudo systemctl start filebeat
+```
+
+---
+
+### Step 8 — DNS Configuration
+
+Domain registered via **GoDaddy**: `theanugrah.com`
+
+| Type | Name | Data |
+|------|------|------|
+| A | @ | Your Public IP |
+| CNAME | www | theanugrah.com |
+
+---
+
+## 🧪 Testing & Verification
+
+### Check All Service Statuses
+
+```bash
+sudo systemctl status apache2
+sudo systemctl status elasticsearch
+sudo systemctl status logstash
+sudo systemctl status kibana
+sudo systemctl status suricata
+sudo systemctl status filebeat
+```
+
+### Verify Log Collection
+
+```bash
+# Apache2 access logs
+cat /var/www/webapp/logs/access.log
+
+# Apache2 error logs
+cat /var/www/webapp/logs/error.log
+
+# Suricata network logs
+sudo nano /var/log/suricata/eve.json
+
+# Filebeat logs
+sudo less /var/log/filebeat/filebeat.log
+```
+
+### Kibana Index Patterns
+
+1. Go to **Kibana → Management → Index Patterns**
+2. Create pattern: `webapp-logs-*` (Apache2 logs via Logstash)
+3. Create pattern: `filebeat-*` (Suricata logs via Filebeat)
+4. Set time field: `@timestamp`
+
+---
+
+## 📊 Monitoring Dashboards
+
+| Dashboard | Index Pattern | Data Source |
+|-----------|--------------|-------------|
+| Web App Logs | `webapp-logs-*` | Apache2 via Logstash |
+| Network Monitoring | `filebeat-*` | Suricata via Filebeat |
+
+The Kibana interface enables filtering by IP address, error codes, attack patterns, and time range for real-time threat analysis.
+
+---
+
+## 📁 Project Structure
+
+```
+Project/
+├── pfsense/                    # pfSense VM files
+├── webserver/                  # Ubuntu Server VM files
+│   ├── /var/www/webapp/        # Web application
+│   │   ├── index.html
+│   │   ├── about.html
+│   │   ├── contact.html
+│   │   ├── css/styles.css
+│   │   └── logs/
+│   │       ├── access.log
+│   │       └── error.log
+│   ├── /etc/apache2/           # Apache2 config
+│   ├── /etc/elasticsearch/     # Elasticsearch config
+│   ├── /etc/logstash/          # Logstash pipeline config
+│   ├── /etc/kibana/            # Kibana config
+│   ├── /etc/suricata/          # Suricata IDS config
+│   └── /etc/filebeat/          # Filebeat config
+└── README.md
+```
+
+---
+
+## ⚠️ Known Limitations
+
+1. **DNS Propagation Delay** — Updates to DNS records take time; frequent server restarts worsen availability.
+2. **Integration Complexity** — Multiple tools require careful configuration alignment and technical expertise.
+3. **No Firewall Log Monitoring** — pfSense logs are not yet piped into ELK (planned for future).
+
+---
+
+## 🔮 Future Work
+
+- **Firewall Log Monitoring** — Pipe pfSense logs into Kibana for complete perimeter visibility
+- **ML/AI Integration** — Anomaly detection algorithms for advanced threat identification
+- **SOAR Automation** — Auto-respond to detected threats in real-time
+- **Cloud Integration** — Extend monitoring to AWS Security Hub / Azure Security Centre
+
+---
+
+## 👨‍💻 Author
+
+**Anugrah Kizhakke Veedu**  
+MSc Cybersecurity — Teesside University  
+Module: CIS4055 Computing Masters Project  
+Supervisor: Harry Stewart
+
+---
+
+## 📜 License
+
+This project was developed as part of an academic dissertation at Teesside University. All tools used are open-source.
+
+---
+
+## 📚 Key References
+
+- pfSense: https://www.pfsense.org
+- Ubuntu Server: https://ubuntu.com
+- Elastic Stack: https://www.elastic.co
+- Suricata IDS: https://suricata.io
+- Oracle VirtualBox: https://www.virtualbox.org
+
