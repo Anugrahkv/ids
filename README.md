@@ -297,30 +297,7 @@ The Kibana interface enables filtering by IP address, error codes, attack patter
 
 ---
 
-## 📁 Project Structure
 
-```
-Project/
-├── pfsense/                    # pfSense VM files
-├── webserver/                  # Ubuntu Server VM files
-│   ├── /var/www/webapp/        # Web application
-│   │   ├── index.html
-│   │   ├── about.html
-│   │   ├── contact.html
-│   │   ├── css/styles.css
-│   │   └── logs/
-│   │       ├── access.log
-│   │       └── error.log
-│   ├── /etc/apache2/           # Apache2 config
-│   ├── /etc/elasticsearch/     # Elasticsearch config
-│   ├── /etc/logstash/          # Logstash pipeline config
-│   ├── /etc/kibana/            # Kibana config
-│   ├── /etc/suricata/          # Suricata IDS config
-│   └── /etc/filebeat/          # Filebeat config
-└── README.md
-```
-
----
 
 ## ⚠️ Known Limitations
 
